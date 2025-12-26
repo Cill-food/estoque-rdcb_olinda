@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Estoque - O Rei da Coxinha</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="login-container" class="login-wrapper">
+      <div class="login-card">
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/5223/5223781.png"
+          alt="Logo"
+          width="80"
+        />
+        <h2>O Rei da Coxinha</h2>
+        <p>Acesse o sistema de estoque</p>
+        <form id="loginForm">
+          <div class="input-group">
+            <label>E-mail</label>
+            <input
+              type="email"
+              id="email"
+              placeholder="seu@email.com"
+              required
+            />
+          </div>
+          <div class="input-group">
+            <label>Senha</label>
+            <input
+              type="password"
+              id="password"
+              placeholder="••••••••"
+              required
+            />
+          </div>
+          <button type="submit" class="btn-login">Entrar</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="painel-sistema" style="display: none">
+      <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+      <div class="wrapper">
+        <nav id="sidebar" class="sidebar">
+          <div class="sidebar-header">
+            <h3>O Rei da Coxinha</h3>
+            <button id="btn-close-sidebar" class="btn-icon-only mobile-only">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <div id="status-conexao" class="status-monitor">
+            <span class="luz-status"></span>
+            <span id="texto-status">Verificando...</span>
+          </div>
+
+          <ul class="nav-links">
+            <li class="active" data-section="secao-estoque">
+              <i class="fas fa-box"></i> Estoque
+            </li>
+            <li data-section="secao-historico">
+              <i class="fas fa-history"></i> Histórico
+            </li>
+            <li id="btn-logout"><i class="fas fa-sign-out-alt"></i> Sair</li>
+          </ul>
+        </nav>
+
+        <main class="content">
+          <header class="header-main">
+            <button id="btn-menu-mobile" class="btn-menu-mobile">
+              <i class="fas fa-bars"></i>
+            </button>
+            <h1>Estoque Atual</h1>
+          </header>
+
+          <section id="secao-estoque">
+            <div class="header-content">
+              <div class="action-buttons">
+                <button id="btn-abrir-modal" class="btn-add">
+                  <i class="fas fa-plus"></i> Novo Item
+                </button>
+                <button
+                  onclick="window.enviarRelatorioWhatsApp()"
+                  class="btn-add whatsapp-btn"
+                >
+                  <i class="fab fa-whatsapp"></i> Relatório
+                </button>
+              </div>
+            </div>
+
+            <div id="lista-estoque">
+              <p>Carregando estoque...</p>
+            </div>
+          </section>
+
+          <section id="secao-historico" style="display: none">
+            <div class="header-content">
+              <h1>Histórico de Movimentações</h1>
+            </div>
+            <div id="lista-historico">
+              <p style="color: #666">Histórico em desenvolvimento...</p>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <div id="modal-produto" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Novo Produto</h2>
+          <button id="btn-fechar-modal" class="btn-close">&times;</button>
+        </div>
+
+        <form id="form-produto">
+          <div class="input-group">
+            <label>Nome do Produto</label>
+            <input
+              type="text"
+              id="nome-produto"
+              placeholder="Ex: Coca-Cola 2L"
+              required
+            />
+          </div>
+
+          <div class="row">
+            <div class="input-group">
+              <label>Qtd Inicial</label>
+              <input type="number" id="qtd-produto" step="0.1" value="0" />
+            </div>
+            <div class="input-group">
+              <label>Unidade</label>
+              <select id="unidade-produto">
+                <option value="un">Unid (un)</option>
+                <option value="L">Litro (L)</option>
+                <option value="kg">Quilo (kg)</option>
+                <option value="cx">Caixa (cx)</option>
+                <option value="pct">Pacote (pct)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Categoria</label>
+            <select id="select-categoria-escolha">
+              <option value="existente">Escolher Existente</option>
+              <option value="nova">+ Criar Nova Categoria</option>
+            </select>
+          </div>
+
+          <div id="grupo-categoria-existente" class="input-group">
+            <select id="categoria-lista">
+              <option value="">Carregando categorias...</option>
+            </select>
+          </div>
+
+          <div
+            id="grupo-categoria-nova"
+            class="input-group"
+            style="display: none"
+          >
+            <input
+              type="text"
+              id="nova-categoria-nome"
+              placeholder="Nome da nova categoria"
+            />
+          </div>
+
+          <div class="row">
+            <div class="input-group">
+              <label>Preço Custo (R$)</label>
+              <input
+                type="number"
+                id="custo-produto"
+                step="0.01"
+                placeholder="0.00"
+              />
+            </div>
+            <div class="input-group">
+              <label>Preço Venda (R$)</label>
+              <input
+                type="number"
+                id="venda-produto"
+                step="0.01"
+                placeholder="0.00"
+              />
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Estoque Mínimo (Alerta)</label>
+            <input type="number" id="minimo-produto" value="5" />
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn-secundario" id="btn-cancelar">
+              Cancelar
+            </button>
+            <button type="submit" class="btn-salvar">Salvar no Estoque</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script type="module" src="auth.js"></script>
+    <script type="module" src="estoque.js"></script>
+  </body>
+</html>
